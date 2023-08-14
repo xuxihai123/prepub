@@ -4,6 +4,9 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 
+const timeoutPromsie = (time) =>
+  new Promise((resolve) => setTimeout(() => resolve()), time);
+
 const npmPrefix = getNpmPrefix();
 const cwd = process.cwd();
 const npmbin = `${npmPrefix}/bin/npm`;
@@ -47,6 +50,7 @@ async function start() {
       "./status.json",
       JSON.stringify({ indexs, validNames }, null, 2)
     );
+    await timeoutPromsie(1000);
   }
 
   //   console.log(jsonObj);
