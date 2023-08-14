@@ -10,7 +10,7 @@ const npmbin = `${npmPrefix}/bin/npm`;
 
 const logdata = require("./status.json");
 
-const validNames = logdata.validName;
+const validNames = logdata.validNames;
 const indexs = logdata.indexs;
 
 const CHARS = " abcdefghijklmnopqrstuvwxyz";
@@ -27,8 +27,8 @@ function getNextName() {
         .join("")
         .trim();
     } else {
-      indexs[i] = 0;
-      temp = 0;
+      indexs[i] = 1;
+      temp = 1;
     }
   }
 }
@@ -37,7 +37,8 @@ async function start() {
   console.log("exec cwd:", cwd);
 
   while (true) {
-    const nextName = getNextName();
+    let nextName = getNextName();
+    nextName = "xxxxxxx12313";
     console.log("nextName:", nextName);
     replaceName(nextName);
     await handle(nextName);
@@ -71,12 +72,12 @@ function getNpmPrefix() {
 
 function toPublish(name) {
   try {
+    validNames.push(name);
     var cmd = `${npmbin} publish .`;
     console.log("exec cmd:", cmd);
     const pwd = path.resolve(cwd, "pkg");
     execSync(cmd, { cwd: pwd, env: process.env, stdio: "inherit" });
     console.log("exec ok!");
-    validNames.push(name);
   } catch (error) {
     console.log("publish err:", error);
   }
@@ -89,7 +90,12 @@ async function handle(name) {
       return;
     }
   } catch (error) {
-    toPublish(name);
+    if (error.response && error.response.status === 404) {
+      validNames.push(name);
+    } else {
+      console.log(error.message);
+    }
+    // toPublish(name);
   }
 }
 
