@@ -86,8 +86,11 @@ function toPublish(name) {
 async function handle(name) {
   try {
     const res = await axios.get("https://registry.npmjs.org/" + name);
-    if (res.ok) {
+    if (res.status === 200) {
+      console.log(res.data.author);
       return;
+    } else {
+      console.log(res.data);
     }
   } catch (error) {
     if (error.response && error.response.status === 404) {
