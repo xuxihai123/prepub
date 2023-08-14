@@ -4,17 +4,14 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 
-
 const npmPrefix = getNpmPrefix();
 const cwd = process.cwd();
 const npmbin = `${npmPrefix}/bin/npm`;
 
 const logdata = require("./status.json");
 
-const validNames= logdata.validName;
+const validNames = logdata.validName;
 const indexs = logdata.indexs;
-
-
 
 const CHARS = " abcdefghijklmnopqrstuvwxyz";
 // const CHARS= [...Array(26)].map((_,i)=>String.fromCharCode(i+97)).join('')
@@ -30,6 +27,7 @@ function getNextName() {
         .join("")
         .trim();
     } else {
+      indexs[i] = 0;
       temp = 0;
     }
   }
@@ -44,7 +42,10 @@ async function start() {
     replaceName(nextName);
     await handle(nextName);
 
-    fs.writeFileSync("./status.json", JSON.stringify({ indexs,validNames },null,2));
+    fs.writeFileSync(
+      "./status.json",
+      JSON.stringify({ indexs, validNames }, null, 2)
+    );
   }
 
   //   console.log(jsonObj);
@@ -75,7 +76,7 @@ function toPublish(name) {
     const pwd = path.resolve(cwd, "pkg");
     execSync(cmd, { cwd: pwd, env: process.env, stdio: "inherit" });
     console.log("exec ok!");
-    validNames.push(name)
+    validNames.push(name);
   } catch (error) {
     console.log("publish err:", error);
   }
