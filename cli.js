@@ -38,7 +38,7 @@ async function start() {
 
   while (true) {
     let nextName = getNextName();
-    nextName = "xxxxxxx12313";
+    // nextName = "xxxxxxx12313";
     console.log("nextName:", nextName);
     replaceName(nextName);
     await handle(nextName);
